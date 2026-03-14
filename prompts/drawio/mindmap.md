@@ -1,3 +1,9 @@
+---
+name: 思维导图
+triggers: [思维导图, mindmap, mind map, 脑图, brainstorm]
+description: 用于绘制思维发散、知识整理、头脑风暴
+---
+
 # 思维导图绘制规则
 
 ## 布局模式

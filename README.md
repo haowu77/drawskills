@@ -1,23 +1,34 @@
 # DrawSkills
 
-> Professional diagram drawing skill for AI coding assistants via [drawio MCP](https://github.com/agentic-labs/drawio-mcp).
+> Professional multi-engine diagram drawing skill for AI coding assistants. Supports [draw.io MCP](https://github.com/agentic-labs/drawio-mcp), Mermaid, and Excalidraw.
 
-让 AI 编程助手通过 drawio MCP 绘制**专业级别**的技术图表。不只是简单的工具调用通道，更提供完整的布局算法、样式规范和图表类型专业知识。
+[中文文档](README.zh-CN.md)
+
+Draw **professional-grade** technical diagrams through AI coding assistants with multiple rendering engines. Not just a tool-calling wrapper — provides complete layout algorithms, style specifications, and diagram-type expertise for each engine.
 
 ## Features
 
-- **6 种图表类型** — 流程图、架构图、时序图、ER 图、思维导图、用例图
-- **智能布局引擎** — 根据节点数量自动计算坐标和间距，告别手动算 x/y
-- **专业配色方案** — 5 套预定义配色 (Material Blue / Purple Dream / Forest Green / Warm Sunset / Monochrome)
-- **自动连线规则** — 根据图表类型选择最佳连线方式和出入点
-- **中文优化** — 字体大小、节点宽度、间距针对中文内容专门调优
+- **Multi-engine support** — draw.io (via MCP), Mermaid (.mmd), Excalidraw (.excalidraw JSON)
+- **Extensible diagram types** — Built-in flowchart, architecture, sequence, ER, mind map, use case; easy to add your own
+- **Smart layout engine** — Automatically calculates coordinates and spacing based on node count
+- **Professional color palettes** — 5 presets per engine (Material Blue / Purple Dream / Forest Green / Warm Sunset / Monochrome)
+- **Auto-routing rules** — Selects optimal connection styles and entry/exit points per diagram type
+- **CJK optimized** — Font sizes, node widths, and spacing tuned for Chinese content
+
+## Supported Engines
+
+| Engine | Output Format | Dependency | Best For |
+|--------|--------------|------------|----------|
+| **draw.io** | drawio XML → SVG/PNG | drawio MCP server | Rich diagrams with precise layout control |
+| **Mermaid** | `.mmd` text file | None (always available) | Quick diagrams, version-control friendly |
+| **Excalidraw** | `.excalidraw` JSON | None (always available) | Hand-drawn style, whiteboard scenarios |
 
 ## Quick Start
 
 ### 1. Prerequisites
 
-- [drawio MCP server](https://github.com/agentic-labs/drawio-mcp) connected to your AI assistant
 - An AI coding assistant that supports [Agent Skills](https://agentskills.io) (e.g., Claude Code)
+- Optional: [drawio MCP server](https://github.com/agentic-labs/drawio-mcp) for draw.io engine
 
 ### 2. Install
 
@@ -32,76 +43,93 @@ git clone https://github.com/haowu77/drawskills.git
 Just tell your AI assistant:
 
 ```
-画一个用户登录的流程图
+Draw a login flowchart
 ```
 
 ```
-Draw an architecture diagram for my project
+用 mermaid 画个时序图
 ```
 
 ```
-帮我画个数据库 ER 图
+Draw an architecture diagram with excalidraw
 ```
 
 The skill will automatically:
-1. Identify the diagram type
-2. Load the corresponding layout rules and style templates
-3. Choose an appropriate color palette
-4. Generate the drawio XML with precise coordinates
-5. Export as SVG (recommended) or PNG
+1. Select the best engine (user preference > MCP availability > default)
+2. Scan `prompts/{engine}/` to discover available diagram types
+3. Match your intent to the best diagram type via trigger keywords
+4. Load the corresponding layout rules and style templates
+5. Choose an appropriate color palette
+6. Generate output in the engine's native format
 
 ## Project Structure
 
 ```
 drawskills/
-├── CLAUDE.md              # Project instructions for AI assistants
-├── SKILL.md               # AgentSkills.io skill definition
+├── CLAUDE.md                       # Project instructions for AI assistants
+├── SKILL.md                        # AgentSkills.io skill definition
+├── engines.md                      # Engine registry + selection rules
 ├── prompts/
-│   ├── _base.md           # Shared base rules (XML structure, layout algorithm, styles)
-│   ├── flowchart.md       # Flowchart-specific rules
-│   ├── architecture.md    # Architecture diagram rules
-│   ├── sequence.md        # Sequence diagram rules
-│   ├── er-diagram.md      # ER diagram rules
-│   ├── mindmap.md         # Mind map rules
-│   └── usecase.md         # Use case diagram rules
+│   ├── _shared.md                  # Engine-agnostic shared rules
+│   ├── drawio/                     # draw.io engine prompts
+│   │   ├── _base.md               # XML structure, layout, styles
+│   │   └── *.md                   # Diagram type rules
+│   ├── mermaid/                    # Mermaid engine prompts
+│   │   ├── _base.md               # Mermaid syntax basics
+│   │   └── *.md                   # Diagram type rules
+│   └── excalidraw/                 # Excalidraw engine prompts
+│       ├── _base.md               # JSON structure, elements
+│       └── *.md                   # Diagram type rules
 ├── palettes/
-│   └── colors.md          # 5 color palette definitions
+│   ├── colors.md                  # draw.io color palettes
+│   ├── mermaid-themes.md          # Mermaid theme configurations
+│   └── excalidraw-colors.md       # Excalidraw color properties
 └── examples/
-    └── *.svg              # Example outputs
+    ├── drawio/                    # draw.io example outputs
+    ├── mermaid/                   # Mermaid example outputs
+    └── excalidraw/                # Excalidraw example outputs
 ```
 
-## Diagram Types
+## Built-in Diagram Types
 
-| Type | Trigger Keywords | Layout |
-|------|-----------------|--------|
-| Flowchart | 流程图, flowchart | Top-down with decision branches |
-| Architecture | 架构图, architecture | Layered with swimlanes |
-| Sequence | 时序图, sequence | Lifelines with message arrows |
-| ER Diagram | ER图, entity relationship | Grid with relationship lines |
-| Mind Map | 思维导图, mindmap | Radial tree from center |
-| Use Case | 用例图, use case | Actors + system boundary |
+| Type | draw.io | Mermaid | Excalidraw | Trigger Keywords |
+|------|---------|---------|------------|-----------------|
+| Flowchart | ✅ | ✅ | ✅ | flowchart, flow, process, 流程图 |
+| Architecture | ✅ | ❌ | ✅ | architecture, arch, system design, 架构图 |
+| Sequence | ✅ | ✅ | ❌ | sequence, interaction, 时序图 |
+| ER Diagram | ✅ | ✅ | ❌ | ER diagram, data model, 实体关系 |
+| Mind Map | ✅ | ✅ | ❌ | mindmap, brainstorm, 思维导图 |
+| Use Case | ✅ | ❌ | ❌ | use case, actor, 用例图 |
+
+## Engine Selection
+
+Priority (high to low):
+1. **Explicit**: User specifies engine — "draw with mermaid", "用 excalidraw 画"
+2. **Preference**: Previously set in conversation
+3. **Availability**: draw.io MCP connected? Excalidraw MCP connected?
+4. **Default**: draw.io (if MCP available) → Mermaid (always available, fallback)
 
 ## How It Works
 
-Each diagram type has a dedicated prompt file in `prompts/` that defines:
+Each engine has its own set of prompt files in `prompts/{engine}/` that define:
 
 - **Layout algorithm** — coordinate calculation formulas, spacing rules, alignment
-- **Shape mapping** — which drawio shapes to use for different semantic elements
+- **Shape mapping** — which shapes to use for different semantic elements
 - **Connection rules** — edge styles, arrow types, routing preferences
 - **Size calculation** — node dimensions based on text content (with CJK width correction)
 
-The base rules in `_base.md` provide shared foundations:
-- drawio XML skeleton structure
-- Adaptive layout parameters (loose/standard/compact based on node count)
-- Universal style defaults (rounded corners, fonts, stroke width)
-- Title and zone/swimlane conventions
+The shared rules in `_shared.md` provide engine-agnostic foundations:
+- Content planning principles
+- Layout density selection (loose/standard/compact)
+- CJK content handling
+- Color palette guidelines
 - Quality checklist
 
 ## Example Output
 
-Architecture diagram generated for [privacy-mask](https://github.com/fullstackcrew-alpha/privacy-mask):
+Architecture diagram generated with draw.io for [privacy-mask](https://github.com/fullstackcrew-alpha/privacy-mask):
 
-![Privacy Mask Architecture](examples/privacy-mask-architecture.svg)
+![Privacy Mask Architecture](examples/drawio/privacy-mask-architecture.svg)
 
 ## Color Palettes
 
@@ -112,6 +140,39 @@ Architecture diagram generated for [privacy-mask](https://github.com/fullstackcr
 | **Forest Green** | DevOps, infrastructure |
 | **Warm Sunset** | Product flows, user journeys |
 | **Monochrome** | Print, formal documentation |
+
+Each palette is available for all three engines with engine-specific configuration.
+
+## Add Your Own Diagram Type
+
+Add new diagram types by creating a `.md` file in the appropriate engine directory.
+
+### Steps
+
+1. Choose the engine: `prompts/drawio/`, `prompts/mermaid/`, or `prompts/excalidraw/`
+
+2. Create your file (e.g., `prompts/mermaid/gantt.md`)
+
+3. Add YAML frontmatter at the top:
+
+```yaml
+---
+name: Gantt Chart
+triggers: [gantt, gantt chart, project plan, timeline]
+description: For drawing project plans and task timelines
+---
+```
+
+4. Write the diagram-specific layout rules for that engine
+
+5. That's it! The AI assistant will automatically discover and use your new diagram type
+
+### Add a New Engine
+
+1. Create `prompts/{engine-name}/` directory with `_base.md`
+2. Add diagram type prompts with frontmatter
+3. Add palette file in `palettes/`
+4. Register in `engines.md`
 
 ## License
 

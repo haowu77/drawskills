@@ -1,3 +1,9 @@
+---
+name: ER 图
+triggers: [ER图, ER diagram, entity relationship, 实体关系, 数据模型, data model, ERD]
+description: 用于绘制数据库实体关系、数据模型
+---
+
 # ER 图绘制规则
 
 ## 布局模式

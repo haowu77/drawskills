@@ -1,3 +1,9 @@
+---
+name: 时序图
+triggers: [时序图, sequence, sequence diagram, 时序, 交互图, interaction]
+description: 用于绘制对象间的消息交互和时间顺序
+---
+
 # 时序图绘制规则
 
 ## 核心概念
