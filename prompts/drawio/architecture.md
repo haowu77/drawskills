@@ -90,19 +90,20 @@ total_width = max(all_layer_widths)
 | 负载均衡     | 三角/菱形      | `shape=rhombus;fillColor=#E0F2F1;strokeColor=#00897B`|
 | 文件存储     | 文件夹        | `shape=folder;fillColor=#FFF8E1;strokeColor=#F9A825`|
 
-## 连线规则
+## ⚠️ 连线是必须的
+
+**层与层之间、组件与组件之间有调用关系的必须画 edge 连线。** 没有连线的架构图是不完整的。
 
 ### 层间连线（纵向）
-```
-style="endArrow=classic;strokeWidth=2;strokeColor=#BDBDBD;
-       exitX=0.5;exitY=1;entryX=0.5;entryY=0;
-       edgeStyle=orthogonalEdgeStyle;"
+```xml
+<mxCell id="edge_comp1_comp2" style="endArrow=classic;strokeWidth=2;strokeColor=#BDBDBD;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;curved=1;"
+  edge="1" source="comp1" target="comp2" parent="1"/>
 ```
 
 ### 同层连线（横向）
-```
-style="endArrow=classic;strokeWidth=1;strokeColor=#90A4AE;dashed=1;
-       exitX=1;exitY=0.5;entryX=0;entryY=0.5;"
+```xml
+<mxCell id="edge_compA_compB" style="endArrow=classic;strokeWidth=1;strokeColor=#90A4AE;dashed=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;"
+  edge="1" source="compA" target="compB" parent="1"/>
 ```
 
 ### 连线标签

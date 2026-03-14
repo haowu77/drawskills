@@ -110,9 +110,44 @@ orthogonalLoop=1;               — 避免重叠
 - **PNG 导出** — 可能包含整个画布空白，适合固定尺寸场景
 - **drawio 格式** — 可后续用 draw.io 手动编辑
 
-## 7. 质量检查清单
+## 7. ⚠️ 连线是必须的
+
+**每张图必须包含 edge（箭头连线）。** 没有连线的图表是不完整的，这是最常见的错误。
+
+关键规则：
+- 每条 edge 必须有 `edge="1"` 属性、`source` 和 `target` 属性
+- 每条 edge 必须有 `parent="1"`
+- edge 的 style 必须包含 `endArrow=classic`（或其他箭头类型）
+- 按从上到下的流向，使用 `exitX=0.5;exitY=1;entryX=0.5;entryY=0`
+- 生成顺序：先写所有节点（vertex），然后写所有连线（edge）
+
+标准连线模板：
+```xml
+<mxCell id="edge_A_to_B" style="endArrow=classic;strokeWidth=2;strokeColor=#78909C;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;curved=1;jettySize=auto;orthogonalLoop=1;"
+  edge="1" source="nodeA" target="nodeB" parent="1"/>
+```
+
+## 8. 画布定位
+
+**所有图形元素必须从画布左上角附近开始绘制，不要放在画布右下角或远离原点的位置。**
+
+- 第一个元素的 x 坐标从 `60` 开始
+- 第一个元素的 y 坐标从 `20`（标题）或 `80`（第一个节点）开始
+- 不要使用过大的坐标值（如 x>2000 或 y>2000），除非图表确实很大
+- `mxGraphModel` 标签上不要设置 `dx`、`dy` 偏移量，或将其设为 `0`
+
+推荐的 mxGraphModel 属性：
+```xml
+<mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="800" pageHeight="600">
+```
+
+注意：`page="0"` 表示无限画布模式，避免内容被限制在固定页面区域之外。
+
+## 9. 质量检查清单
 
 画完图后自查：
+- [ ] **所有相邻节点之间都有 edge 连线**（最重要！）
+- [ ] **图形从画布左上角附近开始**（x≈60, y≈20）
 - [ ] 所有节点有清晰的文字标签
 - [ ] 连线方向一致（不要忽左忽右忽上忽下）
 - [ ] 配色不超过 4-5 种主色

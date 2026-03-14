@@ -9,7 +9,7 @@
 - **输出格式**: drawio XML → SVG/PNG
 - **依赖**: drawio MCP server (`mcp__drawio__*`)
 - **特点**: 最丰富的图表类型支持，精确坐标控制，专业导出
-- **支持的图表类型**: flowchart, architecture, sequence, er-diagram, mindmap, usecase
+- **支持的图表类型**: flowchart, architecture, sequence, er-diagram, mindmap, usecase, api-call
 - **配色文件**: `palettes/colors.md`
 - **输出流程**:
   1. `mcp__drawio__start_session()` — 启动会话
@@ -23,7 +23,7 @@
 - **输出格式**: `.mmd` 文本文件
 - **依赖**: 无（纯文本输出，始终可用）
 - **特点**: 语法简洁、版本控制友好、无需 MCP、可嵌入 Markdown
-- **支持的图表类型**: flowchart, sequence, er-diagram, mindmap
+- **支持的图表类型**: flowchart, sequence, er-diagram, mindmap, api-call
 - **配色文件**: `palettes/mermaid-themes.md`
 - **输出流程**:
   1. 生成 `.mmd` 文件内容
@@ -37,7 +37,7 @@
 - **输出格式**: `.excalidraw` JSON 文件
 - **依赖**: 无（直接写 JSON 文件）或 excalidraw MCP server
 - **特点**: 手绘风格、轻量级、适合白板/头脑风暴场景
-- **支持的图表类型**: flowchart, architecture
+- **支持的图表类型**: flowchart, architecture, api-call
 - **配色文件**: `palettes/excalidraw-colors.md`
 - **输出流程**:
   1. 生成 Excalidraw JSON 结构
@@ -71,5 +71,6 @@
 | er-diagram   | ✅     | ✅      | ❌         |
 | mindmap      | ✅     | ✅      | ❌         |
 | usecase      | ✅     | ❌      | ❌         |
+| api-call     | ✅     | ✅      | ✅         |
 
 当用户请求的图表类型在当前引擎不支持时，建议切换到支持该类型的引擎。
