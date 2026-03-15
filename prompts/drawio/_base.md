@@ -110,6 +110,28 @@ orthogonalLoop=1;               — 避免重叠
 - **PNG 导出** — 可能包含整个画布空白，适合固定尺寸场景
 - **drawio 格式** — 可后续用 draw.io 手动编辑
 
+### ⚠️ SVG viewBox 修正（必做）
+
+draw.io 导出 SVG 时，如果图形不在画布原点附近，导出的 SVG 可能出现：
+- `viewBox="0 0 4720 2846"` 但内容在 `x=3899, y=2211` 处
+- 渲染结果：大片空白 + 右下角缩小的图
+
+**导出 SVG 后必须检查并修正 viewBox：**
+1. 找到 SVG 中所有元素的最小 x/y 和最大 x+width / y+height
+2. 将 viewBox 设为 `"minX-20 minY-10 contentWidth+40 contentHeight+20"`（留 padding）
+3. 同步更新 `width` 和 `height` 属性为内容实际尺寸
+
+示例修正：
+```
+<!-- 修正前：大画布，内容在右下角 -->
+<svg width="4720px" height="2846px" viewBox="0 0 4720 2846">
+
+<!-- 修正后：裁剪到内容区域 -->
+<svg width="860px" height="660px" viewBox="3879 2201 860 660">
+```
+
+**根本预防**：遵守第 8 条画布定位规则，所有图形从 x≈60, y≈20 开始绘制，避免导出偏移。
+
 ## 7. ⚠️ 连线是必须的
 
 **每张图必须包含 edge（箭头连线）。** 没有连线的图表是不完整的，这是最常见的错误。
