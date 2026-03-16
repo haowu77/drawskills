@@ -90,9 +90,21 @@ total_width = max(all_layer_widths)
 | 负载均衡     | 三角/菱形      | `shape=rhombus;fillColor=#E0F2F1;strokeColor=#00897B`|
 | 文件存储     | 文件夹        | `shape=folder;fillColor=#FFF8E1;strokeColor=#F9A825`|
 
-## ⚠️ 连线是必须的
+## ⚠️ 连线是必须的（最重要的规则）
 
 **层与层之间、组件与组件之间有调用关系的必须画 edge 连线。** 没有连线的架构图是不完整的。
+
+**生成步骤必须严格遵守：**
+1. 先生成所有节点（vertex）
+2. **然后逐一检查相邻层之间的调用关系，为每对有关系的组件生成 edge**
+3. 最后检查同层内的横向关系，生成横向 edge
+4. **完成后自查：如果 edge 数量为 0，说明漏画了连线，必须补上**
+
+常见遗漏场景（必须画 edge）：
+- 用户层组件 → 核心层的 Pipeline/Controller
+- Pipeline/Controller → 各处理模块
+- 处理模块 → 底层引擎/数据存储
+- 配置组件 ← Pipeline（加载配置关系，用虚线箭头）
 
 ### 层间连线（纵向）
 ```xml
