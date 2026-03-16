@@ -30,6 +30,20 @@
   2. 写入文件（如 `output.mmd`）
   3. 可选：提示用户用 `mmdc` CLI 渲染为 SVG/PNG
 
+### handsvg
+
+- **ID**: `handsvg`
+- **名称**: Hand-written SVG
+- **输出格式**: `.svg` file (直接写入)
+- **依赖**: 无（始终可用）
+- **特点**: draw.io 视觉风格 + 完整连线渲染，适合 GitHub README 等静态场景
+- **支持的图表类型**: flowchart, architecture
+- **配色文件**: `palettes/colors.md` (与 drawio 共享)
+- **输出流程**:
+  1. 规划节点坐标和连线路径
+  2. 生成完整 SVG XML（包含 path 连线和箭头）
+  3. 直接写入 .svg 文件
+
 ### excalidraw
 
 - **ID**: `excalidraw`
@@ -48,29 +62,31 @@
 
 优先级从高到低：
 
-1. **用户明确指定** — "用 mermaid 画" / "draw with excalidraw" / "用 drawio"
+1. **用户明确指定** — "用 mermaid 画" / "draw with excalidraw" / "用 drawio" / "handsvg"
 2. **对话中已有偏好** — 用户之前设定过引擎偏好
-3. **引擎可用性** — drawio MCP 是否连接、excalidraw MCP 是否连接
-4. **默认顺序** — drawio（如 MCP 可用）→ mermaid（始终可用，兜底）
+3. **场景匹配** — 当需要在 GitHub README 等静态场景渲染带连线的图表时，优先使用 handsvg（draw.io MCP/CLI 导出 SVG 不渲染 edge 路径）
+4. **引擎可用性** — drawio MCP 是否连接、excalidraw MCP 是否连接
+5. **默认顺序** — drawio（如 MCP 可用且需要交互编辑）→ handsvg（静态 SVG 带连线）→ mermaid（始终可用，兜底）
 
 ### 引擎指定的触发词
 
 | 引擎       | 触发词                                                    |
 |-----------|----------------------------------------------------------|
 | drawio    | drawio, draw.io, 用drawio                                |
+| handsvg   | handsvg, 手写svg, hand-written svg, static svg            |
 | mermaid   | mermaid, 用mermaid, mmd                                   |
 | excalidraw| excalidraw, 用excalidraw, 手绘风格, hand-drawn, whiteboard |
 
 ### 图表类型与引擎兼容性
 
-| 图表类型      | drawio | mermaid | excalidraw |
-|--------------|--------|---------|------------|
-| flowchart    | ✅     | ✅      | ✅         |
-| architecture | ✅     | ❌      | ✅         |
-| sequence     | ✅     | ✅      | ❌         |
-| er-diagram   | ✅     | ✅      | ❌         |
-| mindmap      | ✅     | ✅      | ❌         |
-| usecase      | ✅     | ❌      | ❌         |
-| api-call     | ✅     | ✅      | ✅         |
+| 图表类型      | drawio | handsvg | mermaid | excalidraw |
+|--------------|--------|---------|---------|------------|
+| flowchart    | ✅     | ✅      | ✅      | ✅         |
+| architecture | ✅     | ✅      | ❌      | ✅         |
+| sequence     | ✅     | ❌      | ✅      | ❌         |
+| er-diagram   | ✅     | ❌      | ✅      | ❌         |
+| mindmap      | ✅     | ❌      | ✅      | ❌         |
+| usecase      | ✅     | ❌      | ❌      | ❌         |
+| api-call     | ✅     | ❌      | ✅      | ✅         |
 
 当用户请求的图表类型在当前引擎不支持时，建议切换到支持该类型的引擎。

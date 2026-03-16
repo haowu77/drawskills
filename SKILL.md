@@ -2,22 +2,24 @@
 name: drawskills
 description: >-
   Professional multi-engine diagram drawing skill. Supports draw.io (via MCP),
-  Mermaid (.mmd files), and Excalidraw (.excalidraw JSON). Generates high-quality
-  flowcharts, architecture diagrams, sequence diagrams, ER diagrams, mind maps, and more.
+  Hand-written SVG (direct SVG XML with full edge rendering), Mermaid (.mmd files),
+  and Excalidraw (.excalidraw JSON). Generates high-quality flowcharts, architecture
+  diagrams, sequence diagrams, ER diagrams, mind maps, and more.
   Trigger: 画图/draw diagram/画个图/generate diagram + prompts/ 目录下各类型 frontmatter 定义的触发词
 license: MIT
 compatibility: >-
   draw.io engine requires drawio MCP server connected.
+  Hand-written SVG engine always available (no dependencies).
   Mermaid engine always available (text output).
   Excalidraw engine always available (JSON output).
 metadata:
   author: fullstackcrew
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # DrawSkills — 专业图表绘制技能（多引擎）
 
-让大模型通过多种引擎绘制专业级别的技术图表。支持 draw.io、Mermaid、Excalidraw 三种引擎，每种引擎提供布局算法、样式规范和图表类型专业知识。
+让大模型通过多种引擎绘制专业级别的技术图表。支持 draw.io、Hand-written SVG、Mermaid、Excalidraw 四种引擎，每种引擎提供布局算法、样式规范和图表类型专业知识。
 
 ## When to use
 
@@ -31,6 +33,7 @@ metadata:
 | 引擎       | 输出格式              | 依赖                | 特点                    |
 |-----------|----------------------|--------------------|-----------------------|
 | draw.io   | drawio XML → SVG/PNG | drawio MCP server  | 最丰富的图表类型，精确控制  |
+| Hand SVG  | `.svg` 文件（直接写入）| 无（始终可用）       | draw.io 风格 + 完整连线渲染，适合静态场景 |
 | Mermaid   | `.mmd` 文本文件       | 无（始终可用）       | 语法简洁，版本控制友好     |
 | Excalidraw| `.excalidraw` JSON   | 无（始终可用）       | 手绘风格，适合白板场景     |
 
@@ -50,6 +53,13 @@ mcp__drawio__start_session()        — 启动会话
 生成 drawio XML                     — 根据 prompt 规则
 mcp__drawio__create_new_diagram()   — 创建图表
 mcp__drawio__export_diagram()       — 导出 SVG/PNG
+```
+
+### Hand-written SVG 输出流程
+```
+规划节点坐标和连线路径               — 根据 prompt 规则
+生成完整 SVG XML                    — 包含 path 连线和箭头
+直接写入 .svg 文件                   — output.svg
 ```
 
 ### Mermaid 输出流程
